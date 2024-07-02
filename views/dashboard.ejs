@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tableau de bord</h1>
+        <p>Bienvenue, <%= user.name %>!</p>
+        <h2>Vos Catways</h2>
+        <ul>
+            <% catways.forEach(catway => { %>
+                <li>
+                    <strong>Catway <%= catway.catwayNumber %></strong> - <%= catway.type %> - <%= catway.catwayState %>
+                    <a href="/catways/<%= catway._id %>/edit">Modifier</a>
+                    <a href="/catways/<%= catway._id %>/reservations">Voir les réservations</a>
+                </li>
+            <% }) %>
+        </ul>
+        <a href="/catways/new">Créer un nouveau catway</a>
+        <form action="/auth/logout" method="post">
+            <button type="submit">Déconnexion</button>
+        </form>
+    </div>
+</body>
+</html>
