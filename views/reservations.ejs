@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservations pour Catway</title>
+</head>
+<body>
+    <h1>Réservations pour Catway</h1>
+    <ul>
+        <% reservations.forEach(reservation => { %>
+            <li>
+                <p>Réservation ID: <%= reservation._id %></p>
+                <p>Client: <%= reservation.clientName %></p>
+                <p>Bateau: <%= reservation.boatName %></p>
+                <p>Check-in: <%= reservation.checkIn %></p>
+                <p>Check-out: <%= reservation.checkOut %></p>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>

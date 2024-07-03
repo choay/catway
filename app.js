@@ -6,6 +6,7 @@ const reservationRoutes = require('./routes/reservation')
 const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(cors())
@@ -24,15 +25,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.render('index', {title: 'Home'});
 });
 
-app.use('/api/auth', userRoutes);
-app.use('/api/catways', catwayRoutes);
-app.use('/api/reservations', reservationRoutes);
-
+app.use('/auth', userRoutes);
+app.use('/catways', catwayRoutes);
+app.use('/reservations', reservationRoutes);
+app.use('/catways', reservationRoutes);
 
 app.get('/login', (req, res) => {
   res.render('login');

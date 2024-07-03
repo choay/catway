@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Catways</title>
+</head>
+<body>
+    <h1>Liste des Catways</h1>
+    <ul>
+        <% catways.forEach(catway => { %>
+            <li>
+                <strong>Catway Number:</strong> <%= catway.catwayNumber %><br>
+                <strong>Type:</strong> <%= catway.type %><br>
+                <strong>State:</strong> <%= catway.catwayState %><br>
+                <strong>ID:</strong> <%= catway._id %><br>
+                <hr>
+            </li>
+            
+        <% }); %>
+    </ul>
+</body>
+</html>

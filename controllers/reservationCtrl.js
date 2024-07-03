@@ -28,6 +28,7 @@ exports.createReservation = async (req, res) => {
         }
 
         const reservation = new Reservation({
+            userId: req.auth.userId,
             catway: catwayId,
             clientName,
             boatName,
@@ -81,12 +82,14 @@ exports.deleteReservation = async (req, res) => {
 };
 
 exports.getReservationsByCatway = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const reservations = await Reservation.find({ catway: id });
-        res.json(reservations);
-    } catch (error) {
-        console.error('Error fetching reservations:', error);
-        res.status(500).json({ error: error.message });
-    }
+    const catwayId = req.params.id;
+
+    Reservation.find({ catwayId: catwayId })
+        .populate('catwayId')
+        .then(reservations => {
+            res.render('reservations', { reservations: reservations });
+        })
+        .catch(error => {
+            res.status(500).json({ error: error.message });
+        });
 };

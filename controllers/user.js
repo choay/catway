@@ -17,6 +17,7 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
@@ -28,16 +29,22 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
+                    const token = jwt.sign(
+                        { userId: user._id },
+                        process.env.JWT_SECRET,
+                        { expiresIn: '24h' }
+                    );
+                    res.cookie('token', token, {
+                        httpOnly: true,
+                        secure: true, 
+                        maxAge: 24 * 60 * 60 * 1000 
+                    });
                     res.status(200).json({
                         userId: user._id,
-                        token: jwt.sign(
-                            { userId: user._id },
-                            process.env.JWT_SECRET ,
-                            { expiresIn: '24h' }
-                        )
+                        token: token
                     });
                 })
                 .catch(error => res.status(500).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
- };
+};

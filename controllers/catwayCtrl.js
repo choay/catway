@@ -1,3 +1,4 @@
+const { render } = require('ejs');
 const Catway = require('../models/catway');
 
 
@@ -33,19 +34,16 @@ exports.createCatway = (req, res, next) => {
 };
 
 exports.getOneCatway = (req, res, next) => {
-  Catway.findOne({
-    _id: req.params.id
-  }).then(
-    (catway) => {
-      res.status(200).json(catway);
-    }
-  ).catch(
-    (error) => {
-      res.status(404).json({
-        error: error
-      });
-    }
-  );
+  Catway.findById(req.params.id)
+  .then(catway => {
+      if (!catway) {
+          return res.status(404).send('Catway not found');
+      }
+      return res.render('catwayDetails', { catway: catway }); 
+  })
+  .catch(error => {
+      return res.status(400).json({ error: error }); 
+  });
 };
 
 exports.modifyCatway = (req, res, next) => {
@@ -87,15 +85,15 @@ exports.deleteCatway = (req, res, next) => {
 };
 
 exports.getAllCatways = (req, res, next) => {
-  Catway.find().then(
-    (catways) => {
-      res.status(200).json(catways);
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
+  Catway.find()
+        .then(catways => {
+          if (!catways) {
+            return res.status(404).send('pages not found');
+        }
+        return res.render('catways', { catways: catways }); 
+        })
+        .catch(error => {
+            res.status(500).json({ error: error.message }); 
+        });
+
 };

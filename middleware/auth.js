@@ -1,15 +1,17 @@
 const jwt = require('jsonwebtoken');
- 
+
 module.exports = (req, res, next) => {
    try {
-       const token = req.headers.authorization.split(' ')[1];
+       const token = req.cookies.token;
+       if (!token) {
+           return res.status(401).json({ error: 'Authentification requise!' });
+       }
        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-       const userId = decodedToken.userId;
        req.auth = {
-           userId: userId
+           userId: decodedToken.userId
        };
-	next();
+       next();
    } catch(error) {
-       res.status(401).json({ error : 'Authentication failed!'});
+       res.status(401).json({ error: 'Token invalide!' });
    }
 };
