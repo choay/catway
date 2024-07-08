@@ -2,7 +2,7 @@ const Joi = require('joi');
 const Reservation = require('../models/reservation');
 const Catway = require('../models/catway');
 
-// Schéma de validation pour les données de réservation
+
 const reservationSchema = Joi.object({
     clientName: Joi.string().required(),
     boatName: Joi.string().required(),
@@ -11,7 +11,7 @@ const reservationSchema = Joi.object({
 });
 
 exports.createReservation = async (req, res) => {
-    // Validation des données avec Joi
+  
     const { error } = reservationSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
@@ -92,4 +92,17 @@ exports.getReservationsByCatway = async (req, res) => {
         .catch(error => {
             res.status(500).json({ error: error.message });
         });
+};
+exports.renderNewReservationForm = async (req, res) => {
+    try {
+        const catwayId = req.params.id;
+        const catway = await Catway.findById(catwayId);
+        if (!catway) {
+            return res.status(404).send('Catway not found');
+        }
+        res.render('newReservation', { catway });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 };

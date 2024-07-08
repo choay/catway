@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faire une réservation</title>
+</head>
+<body>
+    <h1>Faire une réservation pour le Catway <%= catway.catwayNumber %></h1>
+    <form action="/catways/<%= catway._id %>/reservations" method="post">
+        <div>
+            <label for="clientName">Nom du Client:</label>
+            <input type="text" id="clientName" name="clientName" required>
+        </div>
+        <div>
+            <label for="boatName">Nom du Bateau:</label>
+            <input type="text" id="boatName" name="boatName" required>
+        </div>
+        <div>
+            <label for="checkIn">Date d'arrivée:</label>
+            <input type="date" id="checkIn" name="checkIn" required>
+        </div>
+        <div>
+            <label for="checkOut">Date de départ:</label>
+            <input type="date" id="checkOut" name="checkOut" required>
+        </div>
+        <button type="submit">Réserver</button>
+    </form>
+    <a href="/catways">Retour à la liste des catways</a>
+</body>
+</html>

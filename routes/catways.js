@@ -1,17 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const catwayCtrl = require('../controllers/catwayCtrl');
-const reservationRoutes = require('../routes/reservation');
-const auth = require('../middleware/auth');
 
-router.post('/', auth, catwayCtrl.createCatway);
-router.get('/', auth, catwayCtrl.getAllCatways);
-router.get('/:id', auth, catwayCtrl.getOneCatway);
-router.put('/:id', auth, catwayCtrl.modifyCatway);
-router.patch('/:id', auth, catwayCtrl.modifyCatway);
-router.delete('/:id', auth, catwayCtrl.deleteCatway);
+// Route pour afficher le formulaire de création d'un nouveau catway
+router.get('/new', catwayCtrl.getNewCatwayForm);
 
-// Nest reservation routes under catway routes
-router.use('/:id/reservations', reservationRoutes);
+// Route pour gérer la soumission du formulaire de création d'un nouveau catway
+router.post('/', catwayCtrl.createCatway);
 
+// Route pour afficher les détails d'un catway existant
+router.get('/:id', catwayCtrl.getCatwayById);
+
+// Route pour afficher la liste des catways
+router.get('/', catwayCtrl.getAllCatways);
+
+// Route pour afficher le formulaire d'édition d'un catway existant
+router.get('/:id/edit', catwayCtrl.getEditCatwayForm);
+
+// Route pour mettre à jour un catway existant
+router.post('/:id/edit', catwayCtrl.updateCatway);
 module.exports = router;
+

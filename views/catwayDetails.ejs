@@ -1,6 +1,5 @@
-<!-- catwayDetails.ejs -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +8,11 @@
 <body>
     <h1>Détails du Catway</h1>
     <p><strong>ID :</strong> <%= catway._id %></p>
-    <p><strong>Catway Number :</strong> <%= catway.catwayNumber %></p>
+    <p><strong>Numero Catway:</strong> <%= catway.catwayNumber %></p>
     <p><strong>Type :</strong> <%= catway.type %></p>
-    <p><strong>State :</strong> <%= catway.catwayState %></p>
+    <p><strong>Status :</strong> <%= catway.catwayState %></p>
     <a href="/catways">Retour à la liste des catways</a>
+    <a href="/catways/<%= catway._id %>/newReservation">Faire une réservation</a>
+    <a href="/catways/<%= catway._id %>/edit">modifier</a>
 </body>
 </html>

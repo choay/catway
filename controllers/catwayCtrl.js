@@ -1,99 +1,88 @@
-const { render } = require('ejs');
 const Catway = require('../models/catway');
 
+// Afficher le formulaire de création d'un nouveau catway
+exports.getNewCatwayForm = (req, res) => {
+    res.render('newCatway');
+};
 
-exports.createCatway = (req, res, next) => {
-  const { catwayNumber, type, catwayState } = req.body;
-
-  if (!catwayNumber || !type || !catwayState) {
-    return res.status(400).json({ message: "All fields (catwayNumber, type, catwayState) are required." });
-  }
-
-  const catway = new Catway({
-    catwayNumber,
-    type,
-    catwayState
-  });
-
-  catway.save()
-    .then(() => {
-      res.status(201).json({
-        message: 'Catway created successfully!',
-        catway: catway
-      });
-    })
-    .catch(error => {
-      if (error.name === 'ValidationError') {
-        return res.status(400).json({
-          message: 'Validation failed!',
-          errors: error.errors
+// Créer un nouveau catway
+exports.createCatway = async (req, res) => {
+    try {
+        const { catwayNumber, type, catwayState } = req.body;
+        const newCatway = new Catway({
+            catwayNumber,
+            type,
+            catwayState
         });
-      }
-      return res.status(500).json({ error });
-    });
+        await newCatway.save();
+        res.redirect('/catways');
+    } catch (error) {
+        console.error('Error creating catway:', error);
+        res.status(500).send({ error: 'Error creating catway' });
+    }
 };
 
-exports.getOneCatway = (req, res, next) => {
-  Catway.findById(req.params.id)
-  .then(catway => {
-      if (!catway) {
-          return res.status(404).send('Catway not found');
-      }
-      return res.render('catwayDetails', { catway: catway }); 
-  })
-  .catch(error => {
-      return res.status(400).json({ error: error }); 
-  });
-};
-
-exports.modifyCatway = (req, res, next) => {
-  const catway = new Catway({
-    _id: req.params.id,
-    catwayNumber: req.body.catwayNumber,
-    type: req.body.type,
-    catwayState: req.body.catwayState
-  });
-  Catway.updateOne({_id: req.params.id}, catway).then(
-    () => {
-      res.status(201).json({
-        message: 'Catway updated successfully!'
-      });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
-
-exports.deleteCatway = (req, res, next) => {
-  Catway.deleteOne({_id: req.params.id}).then(
-    () => {
-      res.status(200).json({
-        message: 'Deleted!'
-      });
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
-};
-
-exports.getAllCatways = (req, res, next) => {
-  Catway.find()
-        .then(catways => {
-          if (!catways) {
-            return res.status(404).send('pages not found');
+// Afficher les détails d'un catway existant
+exports.getCatwayById = async (req, res) => {
+    try {
+        const catway = await Catway.findById(req.params.id);
+        if (!catway) {
+            return res.status(404).send({ error: 'Catway not found' });
         }
-        return res.render('catways', { catways: catways }); 
-        })
-        .catch(error => {
-            res.status(500).json({ error: error.message }); 
-        });
+        res.render('catwayDetails', { catway });
+    } catch (error) {
+        console.error('Error fetching catway:', error);
+        if (error.name === 'CastError') {
+            return res.status(400).send({ error: 'Invalid catway ID' });
+        }
+        res.status(500).send({ error: 'Error fetching catway' });
+    }
+};
 
+// Afficher la liste des catways
+exports.getAllCatways = async (req, res) => {
+    try {
+        const catways = await Catway.find({});
+        res.render('catways', { catways });
+    } catch (error) {
+        console.error('Error fetching catways:', error);
+        res.status(500).send({ error: 'Error fetching catways' });
+    }
+};
+exports.getEditCatwayForm = async (req, res) => {
+  try {
+      const catway = await Catway.findById(req.params.id);
+      if (!catway) {
+          return res.status(404).send({ error: 'Catway not found' });
+      }
+      res.render('editCatway', { catway });
+  } catch (error) {
+      console.error('Error fetching catway for edit:', error);
+      if (error.name === 'CastError') {
+          return res.status(400).send({ error: 'Invalid catway ID' });
+      }
+      res.status(500).send({ error: 'Error fetching catway for edit' });
+  }
+};
+
+// Mettre à jour un catway existant
+exports.updateCatway = async (req, res) => {
+  try {
+      const { catwayNumber, type, catwayState } = req.body;
+      const updatedCatway = await Catway.findByIdAndUpdate(req.params.id, {
+          catwayNumber,
+          type,
+          catwayState
+      }, { new: true });
+      if (!updatedCatway) {
+          return res.status(404).send({ error: 'Catway not found' });
+      }
+      res.redirect(`/catways/${req.params.id}`);
+  } catch (error) {
+      console.error('Error updating catway:', error);
+      if (error.name === 'CastError') {
+          return res.status(400).send({ error: 'Invalid catway ID' });
+      }
+      res.status(500).send({ error: 'Error updating catway' });
+  }
 };

@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,14 +11,15 @@
     <ul>
         <% catways.forEach(catway => { %>
             <li>
-                <strong>Catway Number:</strong> <%= catway.catwayNumber %><br>
+                <strong>Numero Catway:</strong> <%= catway.catwayNumber %><br>
                 <strong>Type:</strong> <%= catway.type %><br>
-                <strong>State:</strong> <%= catway.catwayState %><br>
+                <strong>Status:</strong> <%= catway.catwayState %><br>
                 <strong>ID:</strong> <%= catway._id %><br>
+                <a href="/catways/<%= catway._id %>">Voir les détails</a>
                 <hr>
             </li>
-            
         <% }); %>
     </ul>
+    <a href="/catways/new">Ajouter un nouveau Catway</a>
 </body>
 </html>
