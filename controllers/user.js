@@ -11,9 +11,14 @@ exports.signup = (req, res, next) => {
                 password: hash
             });
             user.save()
-                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+            .then(catways => {
+                res.render('dashboard', { 
+                    user: user, 
+                    catways: catways 
+                });
+            })
                 .catch(error => res.status(400).json({ error }));
-        })
+            })
         .catch(error => res.status(500).json({ error }));
 };
 
@@ -39,7 +44,7 @@ exports.login = (req, res, next) => {
                         maxAge: 24 * 60 * 60 * 1000 // 24 hours
                     });
 
-                    // Example catways data
+                    
                     const catways = ['Catway 1', 'Catway 2', 'Catway 3'];
 
                     res.render('dashboard', { 
